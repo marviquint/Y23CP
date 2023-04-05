@@ -27,7 +27,7 @@ def index(request):
             # send OTP to user's email
             send_mail(
                 'Sapphire Login OTP',
-                f'Your login OTP is {otp}. Please do not share this with anyone.',
+                f'Hello {user.first_name},\n\n\tYour login OTP is {otp}. Please do not share this with anyone.\n\n\nBest Regards,\n\nSapphire Admin',
                 settings.EMAIL_HOST_USER,
                 [user.email],
                 fail_silently=False,
@@ -35,7 +35,7 @@ def index(request):
             messages.success(request, 'OTP sent to your email.')
             return redirect('otp')
         else:
-            messages.error(request, 'Invalid email or password.')
+            messages.error(request, {'error': 'Invalid credentials'})
     return render(request, 'base/index.html')
 
 def otp(request):
