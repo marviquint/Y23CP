@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sapphire</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <section class="vh-100" style="background-color:#27678A;">
+      <div class="container h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+          <div class="col col-xl-5">
+            <div class="card border-0 mx-auto" style="border-radius: 0px">
+              <div class="row g-0">
+                <div class="col-md-12 col-lg-12 d-flex align-items-center" style="background-color:#fffff">
+                  <div class="card-body p-4 p-lg-5 text-black">
+                    <div class="row">
+                      <div class="col">
+                        <center><h3 style="color:black;">OTP Verification</h3></center>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col mx-auto">
+                          <center><img src="{% static 'images/message.png' %}" alt="message" class="img-fluid" style="height: 175px; width:225px;" /></center>
+                      </div>
+                  </div>
+                  <div class="row mb-3">
+                      <div class="col mx-auto">
+                         <center>
+                          <h4>Enter the OTP sent to your email.</h4>
+                         </center>
+                      </div>
+                  </div>
+                    <div class="row">
+                      <div class="col">
+                        <form method="POST" action="">
+                          {% csrf_token %}
+                          <div class="row">
+                              <div class="col-7 mx-auto">
+                                  <div class="input-group mb-3">
+                                      <input type="number" id="form2Example17" class="form-control form-control-lg" style="background-color: #eeeeee" />
+                                    </div>
+                              </div>
+                          </div>
+                          <div class="row mb-3">
+                              <div class="col mx-auto">
+                                 <center>
+                                  <p>Didn't receive the OTP? <a href="#" style="color:#41AEB5;">Resend</a></p>
+                                 </center>
+                              </div>
+                          </div>
+                          <center>
+                             <div class="row">
+                              <div class="col-6 pt-1 mb-4 d-grid gap-2 mx-auto">
+                                <button class="btn btn-dark btn-md btn-block text-center border-0" style="background-color:#27678A; border-radius:15px 15px 15px 15px;" type="button">Submit</button>
+                              </div>
+                             </div>
+                          </center>
+                          {% comment %} <a class="small text-muted" href="#!">Forgot password?</a>
+                          <p class="mb-5 pb-lg-2" style="color: #393f81;">Don't have an account? <a href="#!"
+                              style="color: #393f81;">Register here</a></p>
+                          <a href="#!" class="small text-muted">Terms of use.</a>
+                          <a href="#!" class="small text-muted">Privacy policy</a> {% endcomment %}
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+      integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.min.js"
+      integrity="sha384-heAjqF+bCxXpCWLa6Zhcp4fu20XoNIA98ecBC1YkdXhszjoejr5y9Q77hIrv8R9i"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

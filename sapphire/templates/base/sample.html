@@ -1,0 +1,75 @@
+{% extends 'main.html' %} 
+
+{% load static %}
+
+{% block content %}
+<section class="vh-100">
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col col-xl-10">
+          <div class="card border-0" style="border-radius: 0px">
+            <div class="row g-0">
+              <div class="col-md-6 col-lg-6 d-none d-md-block img-fluid" style="background-image: url('{% static 'images/sapphire.png' %}'); background-repeat: no-repeat; height:700px;">
+              </div>
+              <div class="col-md-6 col-lg-6 d-flex align-items-center" style="background-color:#eeeeee">
+                <div class="card-body p-4 p-lg-5 text-black">
+                  <div class="row">
+                    <div class="col">
+                      <center><h1 class="pb-5" style="color:#27678A;">Login Account</h1></center>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <form method="POST" action="">
+                        {% csrf_token %}
+                        <div class="input-group mb-3">
+                          <span class="input-group-text" id="basic-addon1" style="background-color:#41AEB5;"></span>
+                          {{ form.email }}
+                          {% comment %} <input type="email" id="form2Example17" class="form-control form-control-lg" placeholder="Enter Email" /> {% endcomment %}
+                        </div>
+                        <div class="input-group mb-5">
+                          <span class="input-group-text" id="basic-addon1" style="background-color:#41AEB5;"></span>
+                          {{ form.password }}
+                          {% comment %} <input type="password" id="form2Example27" class="form-control form-control-lg" placeholder="Enter Password" /> {% endcomment %}
+                          <button id="show_password" onclick="show()" class="btn" style="background-color:#41AEB5;" type="button">
+                            <img src="https://i.stack.imgur.com/Oyk1g.png" id="EYE"/>
+                         </button>
+                        </div>
+                        <center>
+                           <div class="row">
+                            <div class="col-6 pt-1 mb-4 d-grid gap-2 mx-auto">
+                              <button class="btn btn-dark btn-md btn-block text-center border-0" type="submit" style="background-color:#27678A; border-radius:15px 15px 15px 15px;" type="button">Try add</button>
+                            </div>
+                           </div>
+                        </center>
+                        {% comment %} <a class="small text-muted" href="#!">Forgot password?</a>
+                        <p class="mb-5 pb-lg-2" style="color: #393f81;">Don't have an account? <a href="#!"
+                            style="color: #393f81;">Register here</a></p>
+                        <a href="#!" class="small text-muted">Terms of use.</a>
+                        <a href="#!" class="small text-muted">Privacy policy</a> {% endcomment %}
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script type="text/javascript">  
+    function show() {
+        var a = document.getElementById("form2Example27");
+        var b = document.getElementById("EYE");
+        if (a.type == "password") {
+            a.type = "text";
+            b.src = "https://i.stack.imgur.com/waw4z.png";
+        } else {
+            a.type = "password";
+            b.src = "https://i.stack.imgur.com/Oyk1g.png";
+        }
+    }
+  </script>
+{% endblock content %}
