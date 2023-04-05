@@ -8,6 +8,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
@@ -35,9 +36,10 @@ def index(request):
             messages.success(request, 'OTP sent to your email.')
             return redirect('otp')
         else:
-            messages.error(request, {'error': 'Invalid credentials'})
+            return render(request,'base/index.html', {'error': 'Invalid credentials'})
     return render(request, 'base/index.html')
 
+@login_required
 def otp(request):
     if request.method == 'POST':
         otp = request.POST.get('otp')
@@ -51,15 +53,19 @@ def otp(request):
             messages.error(request, 'Invalid OTP.')
     return render(request, 'base/otp.html')
 
+@login_required
 def home(request):
     return render(request, 'base/home.html')
 
+@login_required
 def search(request):
     return render(request, 'base/searchtool.html')
 
+@login_required
 def url(request):
     return render(request, 'base/url.html')
 
+@login_required
 def signout(request):
     logout(request)
     return redirect('index')
