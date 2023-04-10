@@ -318,133 +318,28 @@ color: var(--blue);
 }
 
 </style>
-    <!-- MAIN -->
-		<main>
-			<div class="head-title">
-				<div class="left">
-					<h1>URL</h1>
-					<ul class="breadcrumb">
-						<li>
-							<a href="#">Dashboard</a>
-						</li>
-						<li><i class='bx bx-chevron-right' ></i></li>
-						<li>
-							<a class="active" href="{% url 'url' %}">URL</a>
-						</li>
-					</ul>
-				</div>
-				
 
-
-
-
-				<a href="#" class="btn-download">
-					<i class='bx bxs-cloud-download' ></i>
-					<span class="text">Download PDF</span>
-				</a>
-			</div>
-			<div class="input-text">
-				<input class="addingurl" type="text" id="addURL" name="addURL" placeholder="Add URL">
-				<input type="text" id="webName" name="wenName" placeholder="Website Name">
-				<button type="submit" class="input-btn"><i class='bx bx-plus' ></i></button>
-				
-			</div>
-		
-
-			<ul class="box-info">
-				<!--
-                    <li>
-				
-					<span class="text">
-						<p>URL List</p>
-					</span>
-				</li>
-            -->
-			</ul>
-
-
-			<div class="table-data">
-				<div class="order">
-					<div class="head">
-						<h3>URL Links</h3>
-						<i class='bx bx-search' ></i>
-						<i class='bx bx-filter' ></i>
-					</div>
-					<table>
-						<thead>
-							<tr>
-								<th>Links</th>
-								<th>Last Updated</th>
-								<th>Website Name</th>
-								<th>Action</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>
-									
-									<p>www.sample.com</p>
-								</td>
-								<td>01-10-2021</td>
-								<td>Title</td>
-								<td>
-									<a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-									<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
-								</td> 
-
-
-							</tr>
-							<tr>
-								<td>
-									
-									<p>www.sample.com</p>
-								</td>
-								<td>01-10-2021</td>
-								<td>Title</td>
-								<td>
-									<a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-									<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
-								</td> 
-							</tr>
-							<tr>
-								<td>
-									
-									<p>www.sample.com</p>
-								</td>
-								<td>01-10-2021</td>
-								<td>Title</td>
-								<td>
-									<a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-									<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
-								</td> 
-							</tr>
-							<tr>
-								<td>
-									
-									<p>www.sample.com</p>
-								</td>
-								<td>01-10-2021</td>
-								<td>Title</td>
-								<td>
-									<a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-									<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
-								</td> 
-							</tr>
-							<tr>
-								<td>
-									
-									<p>www.sample.com</p>
-								</td>
-								<td>01-10-2021</td>
-								<td>Title</td>
-								<td>
-									<a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-									<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
-								</td> 
-							</tr>
-						</tbody>
-					</table>
-				</div>
-            </main>
-            <!-- MAIN -->
+<div class="container-fluid p-4 p-md-5 pt-5">
+    <div class="row">
+        <div class="col">
+            {% comment %} <span><a href="/addnew" class="btn btn-primary">Add New Record</a></span> {% endcomment %}
+            <div class="table-responsive">
+            <table id="bootstrapdatatable" class="table table-striped table-bordered" width="100%">
+            <thead>
+                <th>Website Name</th>
+                <th>Website URL</th>
+            </thead>
+            <tbody>
+            {% for website in websites %}  
+                <tr>  
+                <td>{{ website.name }}</td>
+                <td>{{ website.url }}</td>  
+                </tr>  
+            {% endfor %} 
+            </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}

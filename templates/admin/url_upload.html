@@ -1,0 +1,44 @@
+{% extends 'admin/base_site.html' %}
+
+{% load i18n %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block userlinks %}
+    <!-- Include the user dropdown menu -->
+    {% if user.is_active and user.is_staff %}
+        <div class="userlinks">
+            <a href="{% url 'admin:password_change' %}" class="changelink">{% trans 'Change password' %}</a>
+            <a href="{% url 'admin:logout' %}" class="logout">{% trans 'Log out' %}</a>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% if site_url %}
+        <div class="breadcrumbs">
+            <a href="{{ site_url }}" class="viewsitelink">{% trans 'View site' %}</a>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-8 mx-auto">
+                <center><h1 class="mt-3" style="color: #27678a;" >Upload CSV File</h1></center>
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary mt-3">Upload File</button>
+                </form>
+            </a>
+        </div>
+    </div>
+{% endblock %}
