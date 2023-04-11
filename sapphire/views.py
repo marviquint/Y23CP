@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from sapphire.models import User, OTP, Website
 import random
@@ -9,7 +9,9 @@ from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
 from django.contrib.auth.decorators import login_required
 from django.utils.html import strip_tags
-
+from .forms import CustomPasswordChangeForm
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
 
 # Create your views here.
 
@@ -74,3 +76,23 @@ def url(request):
 def signout(request):
     logout(request)
     return redirect('index')
+
+
+@login_required
+def userProfile(request, pk):
+    user = User.objects.get(id=pk)
+    loggedUser = request.user
+
+    # Handle password change form submission
+    if request.method == 'POST':
+        form = CustomPasswordChangeForm(user=loggedUser, data=request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('userProfile', pk=pk)
+    else:
+        form = CustomPasswordChangeForm(user=user)
+
+    return render(request, 'base/profile.html', {'user': user, 'form': form})
+    

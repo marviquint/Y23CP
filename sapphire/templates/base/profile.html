@@ -1,0 +1,98 @@
+{% extends 'main.html' %} {% block content %}
+<style>
+    body{
+        background:#F0F8FF; 
+        }
+        .card {
+        margin-bottom: 1.5rem;
+        box-shadow: 0 1px 15px 1px rgba(52,40,104,.08);
+        margin-left: 170px;
+        }
+        .card {
+        position: relative;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 1px solid #e5e9f2;
+        border-radius: .2rem;
+        }
+        .card-header:first-child {
+        border-radius: calc(.2rem - 1px) calc(.2rem - 1px) 0 0;
+        }
+        .card-header {
+        border-bottom-width: 1px;
+        }
+        .card-header {
+        padding: .75rem 1.25rem;
+        margin-bottom: 0;
+        color: inherit;
+        background-color: #fff;
+        border-bottom: 1px solid #e5e9f2;
+        }
+</style>
+
+<div class="container p-0">
+    <div class="col-md-10">
+    <div class="tab-content">
+    <div class="tab-pane fade show active" id="account" role="tabpanel">
+    <div class="card">
+    <div class="card-header">
+    <div class="card-actions float-right">
+    <div class="dropdown show">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal align-middle">
+    </svg>
+    </a>
+    </div>
+    </div>
+    <h5 class="card-title mb-0">Sapphire Profile</h5>
+    </div>
+    <div class="card-body">
+    <form>
+    <div class="row">
+    <h5 class="mb-0">Personal Information</h5>
+    <div class="col-md-8">
+        <div class="form-group">
+            <label for="inputEmpID">Employee ID</label>
+            <input type="text" class="form-control" style="background-color:#fff;" id="inputEmpID" placeholder="{{user.employeeID}}" disabled>
+        </div>
+    <div class="form-group">
+        <label for="inputFirstName">First name</label>
+        <input type="text" class="form-control" style="background-color:#fff;" id="inputFirstName" placeholder="{{user.first_name}}" disabled>
+    </div>
+    <div class="form-group">
+        <label for="inputLastName">Last name</label>
+        <input type="text" class="form-control" style="background-color:#fff;" id="inputLastName" placeholder="{{user.last_name}}" disabled>
+    </div>
+    <div class="form-group">
+        <label for="inputEmail4">Email</label>
+        <input type="email" class="form-control" style="background-color:#fff;" id="inputEmail" placeholder="{{user.email}}" disabled>
+    </div>
+    <div class="form-group">
+        <label for="inputUsername">Username</label>
+        <input type="text" class="form-control" style="background-color:#fff;" id="inputUsername" placeholder="{{user.username}}" disabled>
+    </div>
+    </div>
+    <div class="col-md-4">
+    <div class="text-center">
+    <img alt="{{user.first_name}}" src="https://bootdey.com/img/Content/avatar/avatar1.png" class="rounded-circle img-responsive mt-2" width="150" height="150">
+    </div>
+    </div>
+    </div>
+    </form>
+    </div>
+    </div>
+    <div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Login Information</h5>
+    </div>
+    <div class="card-body">
+        <a href="{% url 'password_change' %}">Change password</a>
+    </div>
+    </div>
+    </form>
+    {% endblock content %}
