@@ -1,0 +1,18 @@
+{% extends 'main.html' %} {% block content %}
+
+<!-- MAIN -->
+<div class="container p-3 m-3 mx-auto">
+  <div class="row">
+    <div class="col-12">
+      <h1>Crawled Data:</h1>
+      <ul>
+        {% for item in data %}
+        <li>{{ item }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- MAIN -->
+
+{% endblock content %}

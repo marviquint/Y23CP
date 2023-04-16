@@ -67,6 +67,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'sapphire.views.DjangoScrapyMiddleware',
 ]
 
 ROOT_URLCONF = 'Y23CP.urls'
@@ -164,3 +165,14 @@ MEDIA_ROOT = BASE_DIR / 'static/images'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+ROBOTSTXT_OBEY = False
+
+FEED_FORMAT = 'json'
+FEED_URI = 'output.json'
+
+SPIDER_MIDDLEWARES = {
+    'myproject.middlewares.StartSpiderMiddleware': 543,
+}
+
+SCRAPY_SETTINGS_MODULE = 'Y23CP.settings'

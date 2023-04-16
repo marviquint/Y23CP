@@ -8,5 +8,7 @@ urlpatterns = [
     path('otp/', views.otp, name='otp'),
     path('home/', views.home, name='home'),
     path('search/', views.search, name='search'),
+    path('success/', views.success, name='success'),
+    # path('crawl/', views.crawl, name='crawl'),
     path('url/', views.url, name='url'),
 ]
