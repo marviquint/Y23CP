@@ -176,3 +176,18 @@ SPIDER_MIDDLEWARES = {
 }
 
 SCRAPY_SETTINGS_MODULE = 'Y23CP.settings'
+
+# Scrapy settings
+SCRAPER_SETTINGS = {
+    'BOT_NAME': 'scrapy_project',
+    'SPIDER_MODULES': ['scrapy_project.spiders'],
+    'NEWSPIDER_MODULE': 'scrapy_project.spiders',
+    'ROBOTSTXT_OBEY': True,
+}
+
+# Set the path to your Scrapy project
+SCRAPER_PROJECT_PATH = '/scrapy_project/scrapyproject/scrapyproject'
+
+# Add the Scrapy project to the Python path
+import sys
+sys.path.append(SCRAPER_PROJECT_PATH)

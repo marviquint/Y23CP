@@ -15,6 +15,11 @@ from django.contrib.auth import update_session_auth_hash
 from django.conf import settings
 from django.contrib import messages
 from scrapy_project.scrapyproject.scrapyproject.spiders.spider_runner import run_spider
+from twisted.internet import reactor, defer, threads
+from scrapy.crawler import CrawlerRunner
+from scrapy.utils.project import get_project_settings
+from scrapy_project.scrapyproject.scrapyproject.spiders.lawspider import MySpider
+
 
 
 # Create your views here.
@@ -93,16 +98,22 @@ def home(request):
 def search(request):
     form = ScrapeForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
-        url = request.POST.get('url', '')
+        url = form.cleaned_data['url']
         if url:
-            data = run_spider(url)
-            request.session['scraped_data'] = data
-            messages.success(request, 'Scraping completed successfully.')
-            return redirect('success')
+            run_spider(url)
+            # indicate that the spider has finished running
+            messages.success(request, 'Spider finished running.')
         else:
             messages.error(request, 'Please enter a URL.')
             return redirect('search')
     return render(request, 'base/searchtool.html', {'form': form})
+
+def display(request):
+    scraped_data = request.session.get('scraped_data', [])
+    context = {
+        'data': scraped_data,
+    }
+    return render(request, 'base/display.html', context)
 
 def success(request):
     data = request.session.get('scraped_data', []) # retrieve data from session

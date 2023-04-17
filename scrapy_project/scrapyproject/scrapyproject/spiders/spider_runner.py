@@ -1,18 +1,34 @@
-import os
-import django
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project_name.settings")
-django.setup()
-
+from twisted.internet import reactor, defer
+from scrapy.crawler import CrawlerRunner
 from scrapy.utils.project import get_project_settings
-from scrapy.crawler import CrawlerProcess
-
-from scrapy_project.scrapyproject.scrapyproject.spiders.scrapyspider import QuotesSpider
-from twisted.internet import reactor
+from scrapy_project.scrapyproject.scrapyproject.spiders.lawspider import MySpider
+import json
+from scrapy.exceptions import DropItem
+import os
 
 def run_spider(url):
-    scraped_data = []
-    process = CrawlerProcess(get_project_settings())
-    process.crawl(QuotesSpider, search_term=url, scraped_data=scraped_data)
-    reactor.run(installSignalHandlers=False)
-    return scraped_data
+    spider_cls = MySpider
+    settings = get_project_settings()
+    runner = CrawlerRunner(settings)
+    deferred = runner.crawl(spider_cls, start_url=url)
+
+    def handle_results(results):
+        scraped_data = []
+        for result in results:
+            if isinstance(result, dict):
+                scraped_data.append(result)
+
+        # Write scraped data to a JSON file
+        file_path = os.path.join(os.getcwd(), 'output.json')
+        with open(file_path, 'w') as f:
+            json.dump(scraped_data, f)
+
+    def handle_error(failure):
+        if failure.check(DropItem):
+            print('Item dropped:', failure.value)
+        else:
+            print('Error:', failure.getErrorMessage())
+
+    deferred.addCallbacks(handle_results, handle_error)
+    deferred.addBoth(lambda _: reactor.stop())
+    reactor.run()
