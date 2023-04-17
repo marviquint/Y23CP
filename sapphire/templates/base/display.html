@@ -1,31 +1,10 @@
 {% extends 'main.html' %}
 
 {% block content %}
-  <div class="container p-3 m-3 mx-auto">
-    <div class="row">
-      <div class="col-12">
-      <!-- base/display.html -->
-      <table>
-        <thead>
-          <tr>
-            <th>Field 1</th>
-            <th>Field 2</th>
-            <th>Field 3</th>
-            <!-- Add more fields as per your requirements -->
-          </tr>
-        </thead>
-        <tbody>
-          {% for item in data %}
-            <tr>
-              <td>{{ item.field1 }}</td>
-              <td>{{ item.field2 }}</td>
-              <td>{{ item.field3 }}</td>
-              <!-- Add more fields as per your requirements -->
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-      </div>
-    </div>
-  </div>
+<h1>Scraped Data</h1>
+	<ul>
+	{% for item in data %}
+		<li><strong>{{ item.rule_name }}:</strong> {{ item.data }}</li>
+	{% endfor %}
+	</ul>
 {% endblock %}

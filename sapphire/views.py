@@ -16,9 +16,13 @@ from django.conf import settings
 from django.contrib import messages
 from scrapy_project.scrapyproject.scrapyproject.spiders.spider_runner import run_spider
 from twisted.internet import reactor, defer, threads
-from scrapy.crawler import CrawlerRunner
+from scrapy.crawler import CrawlerRunner, CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from scrapy_project.scrapyproject.scrapyproject.spiders.lawspider import MySpider
+from scrapy.utils.log import configure_logging
+import json
+configure_logging()
+runner = CrawlerRunner()
 
 
 
@@ -94,26 +98,64 @@ def home(request):
 #                 messages.error(request, 'Please enter a URL.')
 #                 return redirect('search')
 #         return self.get_response(request)
+def run_spider(url):
+    results = []
+    settings = get_project_settings()
+    process = CrawlerProcess(settings)
+    runner = CrawlerRunner(settings)
+
+    @defer.inlineCallbacks
+    def crawl():
+        yield runner.crawl(MySpider, start_url=url)
+        reactor.stop()
+
+    crawl()
+    reactor.run()
+
+    with open('results.json', 'r') as f:
+        for line in f.readlines():
+            results.append(json.loads(line))
+    
+    return results
+
 
 def search(request):
     form = ScrapeForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
         url = form.cleaned_data['url']
         if url:
-            run_spider(url)
-            # indicate that the spider has finished running
-            messages.success(request, 'Spider finished running.')
+            results = run_spider(url)
+            if results:
+                scraped_data = []
+                for result in results:
+                    if isinstance(result, dict):
+                        scraped_data.append(result)
+                with open('results.json', 'w') as f:
+                    json.dump(scraped_data, f)
+                messages.success(request, 'Spider finished running. Scraped data written to results.json file.')
+            else:
+                messages.error(request, 'No results were found.')
+                return redirect('search')
         else:
             messages.error(request, 'Please enter a URL.')
             return redirect('search')
     return render(request, 'base/searchtool.html', {'form': form})
 
 def display(request):
-    scraped_data = request.session.get('scraped_data', [])
+    scraped_data = []
+    with open('results.json', 'r') as f:
+        data = json.load(f)
+        if isinstance(data, dict):
+            for key, value in data.items():
+                scraped_data.append({'rule_name': key, 'data': value})
+        elif isinstance(data, list):
+            for item in data:
+                scraped_data.append({'rule_name': item.get('rule name', ''), 'data': item.get('data', '')})
     context = {
         'data': scraped_data,
     }
     return render(request, 'base/display.html', context)
+
 
 def success(request):
     data = request.session.get('scraped_data', []) # retrieve data from session

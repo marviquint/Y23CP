@@ -1,4 +1,5 @@
 import scrapy
+import json
 
 class MySpider(scrapy.Spider):
     name = 'sapphire1_891'
@@ -6,6 +7,7 @@ class MySpider(scrapy.Spider):
     def __init__(self, start_url=None, *args, **kwargs):
         super(MySpider, self).__init__(*args, **kwargs)
         self.start_url = start_url
+        self.items = {}
 
     def start_requests(self):
         yield scrapy.Request(url=self.start_url, callback=self.parse)
@@ -18,7 +20,7 @@ class MySpider(scrapy.Spider):
         links = response.css('#co_contentColumn li+ li a::attr(href)').getall()
         print("Links found: ", links)
         for link in links:
-            yield scrapy.Request(url=response.urljoin(link), callback=self.parse_link)
+            yield response.follow(link, callback=self.parse_link)
 
     def parse_link(self, response):
         # Extract data from the link page
@@ -33,7 +35,17 @@ class MySpider(scrapy.Spider):
         item = {}
         item[''+rule_name] = data
         
-        yield item
+        # Add item to self.items
+        self.items.update(item)
+        
         # Follow more links if needed
         for link in response.css('#co_contentColumn li+ li a::attr(href)').getall():
             yield scrapy.Request(url=response.urljoin(link), callback=self.parse_link)
+    
+    def closed(self, reason):
+        self.handle_results()
+    
+    def handle_results(self):
+        # Write self.items to a JSON file
+        with open('results.json', 'w') as f:
+            json.dump(self.items, f)
