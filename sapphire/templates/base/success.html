@@ -1,18 +1,18 @@
-{% extends 'main.html' %} {% block content %}
+{% extends 'main.html' %}
 
-<!-- MAIN -->
-<div class="container p-3 m-3 mx-auto">
-  <div class="row">
-    <div class="col-12">
-      <h1>Crawled Data:</h1>
-      <ul>
-        {% for item in data %}
-        <li>{{ item }}</li>
-        {% endfor %}
-      </ul>
+{% block content %}
+  <div class="container p-3 m-3 mx-auto">
+    <div class="row">
+      <div class="col-12">
+        <h1>Crawled Data:</h1>
+        <ul>
+          {% for item in scraped_data %}
+            <li>{{ item }}</li>
+          {% empty %}
+            <li>No data found.</li>
+          {% endfor %}
+        </ul>
+      </div>
     </div>
   </div>
-</div>
-<!-- MAIN -->
-
-{% endblock content %}
+{% endblock %}

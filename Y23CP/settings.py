@@ -67,7 +67,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'sapphire.views.DjangoScrapyMiddleware',
+    # 'sapphire.views.DjangoScrapyMiddleware',
 ]
 
 ROOT_URLCONF = 'Y23CP.urls'
