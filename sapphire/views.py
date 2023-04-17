@@ -20,7 +20,7 @@ from scrapy.crawler import CrawlerRunner, CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from scrapy_project.scrapyproject.scrapyproject.spiders.lawspider import MySpider
 from scrapy.utils.log import configure_logging
-import json
+import json, os
 configure_logging()
 runner = CrawlerRunner()
 
@@ -143,7 +143,8 @@ def search(request):
 
 def display(request):
     scraped_data = []
-    with open('results.json', 'r') as f:
+    file_path = os.path.join(os.getcwd(), 'results.json')
+    with open(file_path, 'r') as f:
         data = json.load(f)
         if isinstance(data, dict):
             for key, value in data.items():
@@ -155,7 +156,6 @@ def display(request):
         'data': scraped_data,
     }
     return render(request, 'base/display.html', context)
-
 
 def success(request):
     data = request.session.get('scraped_data', []) # retrieve data from session
