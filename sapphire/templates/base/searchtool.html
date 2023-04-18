@@ -14,9 +14,20 @@
           {% endfor %}
       </ul>
       {% endif %}
+        <!-- for ScrapeForm -->
+        <form method="post">
+          {% csrf_token %}
+          {{ main_url_form.as_p }}
+          <button type="submit" class="btn btn-primary">Crawl</button>
+        </form>
+
+      <hr>
+
+      <h1>Crawl PDF</h1>
+<!-- for PDFScrapeForm -->
       <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ pdf_url_form.as_p }}
         <button type="submit" class="btn btn-primary">Crawl</button>
       </form>
     </div>

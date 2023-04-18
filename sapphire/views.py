@@ -9,7 +9,7 @@ from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
 from django.contrib.auth.decorators import login_required
 from django.utils.html import strip_tags
-from .forms import CustomPasswordChangeForm, ScrapeForm
+from .forms import CustomPasswordChangeForm, ScrapeForm, PDFScrapeForm
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.conf import settings
@@ -19,6 +19,7 @@ from twisted.internet import reactor, defer, threads
 from scrapy.crawler import CrawlerRunner, CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from scrapy_project.scrapyproject.scrapyproject.spiders.lawspider import MySpider
+from scrapy_project.scrapyproject.scrapyproject.spiders.pdfspider import PDFSpider
 from scrapy.utils.log import configure_logging
 from scrapy import signals
 from scrapy.signalmanager import dispatcher
@@ -129,17 +130,60 @@ def run_spider(url):
     return items
 
 
+def spider_runner_pdf(url):
+    settings = get_project_settings()
+    process = CrawlerRunner(settings)
+    runner = CrawlerRunner(settings)
+
+    @defer.inlineCallbacks
+    def crawl():
+        yield runner.crawl(PDFSpider, url=url)
+        reactor.stop()
+
+    crawl()
+    reactor.run()
+
+    items = {}
+    path = os.path.join(django_settings.STATICFILES_DIRS[0], 'pdfs')
+    for file_name in os.listdir(path):
+        if file_name.endswith('.txt'):
+            with open(os.path.join(path, file_name), 'r') as f:
+                rule_name = file_name[:-4]  # remove the '.txt' extension
+                data = f.read()
+                items[rule_name] = data
+
+    return items
+
 def search(request):
-    form = ScrapeForm(request.POST or None)
-    if request.method == 'POST' and form.is_valid():
-        url = form.cleaned_data['url']
-        if url:
-            request.session['scraped_data'] = run_spider(url)
-            return redirect('display')
-        else:
-            messages.error(request, 'Please enter a URL.')
-            return redirect('search')
-    return render(request, 'base/searchtool.html', {'form': form})
+    main_url_form = ScrapeForm(request.POST or None, prefix='main_url')
+    pdf_url_form = PDFScrapeForm(request.POST or None, prefix='pdf_url')
+
+    if request.method == 'POST':
+        if main_url_form.is_valid():
+            main_url = main_url_form.cleaned_data['main_url']
+            if main_url:
+                request.session['scraped_data_main'] = run_spider(main_url)
+                return redirect('display')
+            else:
+                messages.error(request, 'Please enter a URL for main page.')
+                return redirect('search')
+
+        if pdf_url_form.is_valid():
+            pdf_url = pdf_url_form.cleaned_data['pdf_spider_url']
+            if pdf_url:
+                try:
+                    spider_runner_pdf(pdf_url)
+                    messages.success(request, 'PDF crawl successful.')
+                except Exception as e:
+                    messages.error(request, f'Error during PDF crawl: {str(e)}')
+            else:
+                messages.error(request, 'Please enter a URL for PDF.')
+        return redirect('search')
+
+    return render(request, 'base/searchtool.html', {
+        'main_url_form': main_url_form,
+        'pdf_url_form': pdf_url_form
+    })
 
 def display(request):
     scraped_data = request.session.get('scraped_data', [])

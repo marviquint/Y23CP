@@ -12,7 +12,9 @@ class MySpider(scrapy.Spider):
         self.items = {}
 
     def start_requests(self):
-        yield scrapy.Request(url=self.start_url, callback=self.parse)
+        start_url = self.start_url
+        yield scrapy.Request(url=start_url, callback=self.parse)
+
 
     def parse(self, response):
         # Extract data from the main page if needed

@@ -11,9 +11,15 @@ class CustomPasswordChangeForm(PasswordChangeForm):
             self.fields[field_name].widget.attrs.update({'class': 'form-control'})
 
 class ScrapeForm(forms.Form):
-     url = forms.CharField(
-        label='Enter URL to Scrape',
+    main_url = forms.CharField(
+        label='Enter main URL to scrape',
         max_length=255,
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
 
+class PDFScrapeForm(forms.Form):
+    pdf_spider_url = forms.CharField(
+        label='Enter URL for PDF Spider',
+        max_length=255,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
