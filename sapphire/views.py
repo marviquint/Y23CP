@@ -147,6 +147,7 @@ def display(request):
     for item in scraped_data:
         for rule_name, data in item.items():
             results.append({'rule_name': rule_name, 'data': data})
+            results.sort(key=lambda x: x['rule_name']) # Sort the list by rule_name
     context = {
         'data': results,
     }
