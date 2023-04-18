@@ -169,7 +169,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 ROBOTSTXT_OBEY = False
 
 FEED_FORMAT = 'json'
-FEED_URI = 'output.json'
+FEED_URI = 'results.json'
 
 SPIDER_MIDDLEWARES = {
     'myproject.middlewares.StartSpiderMiddleware': 543,

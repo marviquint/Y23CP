@@ -1,10 +1,13 @@
 {% extends 'main.html' %}
 
 {% block content %}
+
 <h1>Scraped Data</h1>
-	<ul>
-	{% for item in data %}
-		<li><strong>{{ item.rule_name }}:</strong> {{ item.data }}</li>
-	{% endfor %}
-	</ul>
+<ul>
+  {% for item in data %}
+  <h2><strong>{{ item.rule_name }}:</strong></h2>
+  <p>{{ item.data }}</p>
+  {% endfor %}
+</ul>
+
 {% endblock %}
