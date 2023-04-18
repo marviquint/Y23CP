@@ -6,7 +6,7 @@
 <div class="container p-3 m-3 mx-auto">
   <div class="row">
     <div class="col-4">
-      <h1>Scrape a website</h1>
+      <h1>Crawl Website</h1>
       {% if messages %}
       <ul class="messages">
           {% for message in messages %}
@@ -17,7 +17,7 @@
       <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Scrape</button>
+        <button type="submit" class="btn btn-primary">Crawl</button>
       </form>
     </div>
   </div>
