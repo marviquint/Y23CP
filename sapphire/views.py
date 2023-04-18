@@ -4,7 +4,7 @@ from sapphire.models import User, OTP, Website
 import random
 from django.contrib.auth import authenticate, login, logout
 from django.core.mail import send_mail
-from django.conf import settings
+from django.conf import settings as django_settings
 from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
 from django.contrib.auth.decorators import login_required
@@ -117,17 +117,17 @@ def run_spider(url):
     crawl()
     reactor.run()
 
-    with open('results.json', 'r') as f:
-        items = []
-        for line in f.readlines():
-            items.append(json.loads(line))
-    
+    items = {}
+    path = os.path.join(django_settings.STATICFILES_DIRS[0], 'files')
+    for file_name in os.listdir(path):
+        if file_name.endswith('.txt'):
+            with open(os.path.join(path, file_name), 'r') as f:
+                rule_name = file_name[:-4]  # remove the '.txt' extension
+                data = f.read()
+                items[rule_name] = data
+
     return items
 
-def _on_spider_closed(spider):
-    with open('results.json', 'w') as f:
-        for item in spider.items:
-            f.write(json.dumps(item) + '\n')
 
 def search(request):
     form = ScrapeForm(request.POST or None)
@@ -144,10 +144,9 @@ def search(request):
 def display(request):
     scraped_data = request.session.get('scraped_data', [])
     results = []
-    for item in scraped_data:
-        for rule_name, data in item.items():
-            results.append({'rule_name': rule_name, 'data': data})
-            results.sort(key=lambda x: x['rule_name']) # Sort the list by rule_name
+    for rule_name, data in scraped_data.items():
+        results.append({'rule_name': rule_name, 'data': data})
+        results.sort(key=lambda x: x['rule_name']) # Sort the list by rule_name
     context = {
         'data': results,
     }
