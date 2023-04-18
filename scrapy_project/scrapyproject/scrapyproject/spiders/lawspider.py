@@ -19,7 +19,7 @@ class MySpider(scrapy.Spider):
         # ...
 
         # Follow links to other pages
-        links = response.css('.co_genericWhiteBox a::attr(href)').getall()
+        links = response.css('#co_contentColumn li+ li a::attr(href)').getall()
         print("Links found: ", links)
         for link in links:
             yield response.follow(link, callback=self.parse_link)
@@ -41,7 +41,7 @@ class MySpider(scrapy.Spider):
         self.items.update(item)
         
         # Follow more links if needed
-        for link in response.css('.co_genericWhiteBox a::attr(href)').getall():
+        for link in response.css('#co_contentColumn li+ li a::attr(href)').getall():
             yield scrapy.Request(url=response.urljoin(link), callback=self.parse_link)
     
     def closed(self, reason):
