@@ -105,6 +105,8 @@ def home(request):
 #                 messages.error(request, 'Please enter a URL.')
 #                 return redirect('search')
 #         return self.get_response(request)
+    
+
 def run_spider(url):
     settings = get_project_settings()
     process = CrawlerProcess(settings)
@@ -113,11 +115,9 @@ def run_spider(url):
     @defer.inlineCallbacks
     def crawl():
         yield runner.crawl(MySpider, start_url=url)
-        reactor.stop()
 
     crawl()
     reactor.run()
-
     items = {}
     path = os.path.join(django_settings.STATICFILES_DIRS[0], 'files')
     for file_name in os.listdir(path):
@@ -132,27 +132,13 @@ def run_spider(url):
 
 def spider_runner_pdf(url):
     settings = get_project_settings()
-    process = CrawlerRunner(settings)
     runner = CrawlerRunner(settings)
 
     @defer.inlineCallbacks
     def crawl():
-        yield runner.crawl(PDFSpider, url=url)
-        reactor.stop()
+        yield runner.crawl(PDFSpider, start_url=url)
 
     crawl()
-    reactor.run()
-
-    items = {}
-    path = os.path.join(django_settings.STATICFILES_DIRS[0], 'pdfs')
-    for file_name in os.listdir(path):
-        if file_name.endswith('.txt'):
-            with open(os.path.join(path, file_name), 'r') as f:
-                rule_name = file_name[:-4]  # remove the '.txt' extension
-                data = f.read()
-                items[rule_name] = data
-
-    return items
 
 def search(request):
     main_url_form = ScrapeForm(request.POST or None, prefix='main_url')
@@ -163,19 +149,19 @@ def search(request):
             main_url = main_url_form.cleaned_data['main_url']
             if main_url:
                 request.session['scraped_data_main'] = run_spider(main_url)
-                return redirect('display')
+                messages.success(request, 'The crawl is successful.')
+                print('The crawl successful.')
             else:
                 messages.error(request, 'Please enter a URL for main page.')
                 return redirect('search')
-
+            
+    if request.method == 'POST':
         if pdf_url_form.is_valid():
             pdf_url = pdf_url_form.cleaned_data['pdf_spider_url']
             if pdf_url:
-                try:
-                    spider_runner_pdf(pdf_url)
-                    messages.success(request, 'PDF crawl successful.')
-                except Exception as e:
-                    messages.error(request, f'Error during PDF crawl: {str(e)}')
+                spider_runner_pdf(pdf_url)
+                messages.success(request, 'PDF crawl successful.')
+                print('PDF crawl successful.')
             else:
                 messages.error(request, 'Please enter a URL for PDF.')
         return redirect('search')

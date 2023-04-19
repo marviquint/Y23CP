@@ -6,16 +6,11 @@ from django.conf import settings
 
 class PDFSpider(scrapy.Spider):
     name = 'pdf_spider'
+    start_urls = []
 
-    def __init__(self, pdf_url=None, *args, **kwargs):
+    def __init__(self, start_url=None, *args, **kwargs):
         super(PDFSpider, self).__init__(*args, **kwargs)
-        self.start_urls = [pdf_url]
-
-
-    def start_requests(self):
-        start_url = self.start_url
-        yield scrapy.Request(url=start_url, callback=self.parse)
-
+        self.start_urls = [start_url]
         
     def parse(self, response):
         # Extract data from the main page if needed
