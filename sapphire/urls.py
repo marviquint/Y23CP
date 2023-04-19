@@ -10,6 +10,6 @@ urlpatterns = [
     path('otp/', views.otp, name='otp'),
     path('home/', views.home, name='home'),
     path('search/', views.search, name='search'),
-    path('display/', views.display, name='display'),
     path('url/', views.url, name='url'),
+    path('comparing/', views.comparing, name='comparing'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

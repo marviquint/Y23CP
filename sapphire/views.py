@@ -1,7 +1,5 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, redirect
 from sapphire.models import User, OTP, Website
-import random
 from django.contrib.auth import authenticate, login, logout
 from django.core.mail import send_mail
 from django.conf import settings as django_settings
@@ -15,17 +13,13 @@ from django.contrib.auth import update_session_auth_hash
 from django.conf import settings
 from django.contrib import messages
 from scrapy_project.scrapyproject.scrapyproject.spiders.spider_runner import run_spider
-from twisted.internet import reactor, defer, threads
+from twisted.internet import reactor, defer
 from scrapy.crawler import CrawlerRunner, CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from scrapy_project.scrapyproject.scrapyproject.spiders.lawspider import MySpider
 from scrapy_project.scrapyproject.scrapyproject.spiders.pdfspider import PDFSpider
 from scrapy.utils.log import configure_logging
-from scrapy import signals
-from scrapy.signalmanager import dispatcher
-import json, os, uuid
-from django.core.cache import cache
-from django.http import Http404
+import os, difflib 
 
 configure_logging()
 
@@ -82,29 +76,6 @@ def home(request):
         return render(request, 'base/home.html', {'show_modal': True})
     else:
         return render(request, 'base/home.html')
-
-# @login_required
-# class DjangoScrapyMiddleware:
-#     def __init__(self, get_response=None, crawler_process=None):
-#         self.get_response = get_response
-#         self.scraped_data = []
-#         self.crawler_process = crawler_process
-        
-#     def __call__(self, request):
-#         if request.method == 'POST':
-#             url = request.POST.get('url', '')
-#             if url:
-#                 self.scraped_data = []
-#                 spider = QuotesSpider(search_term=url, scraped_data=self.scraped_data)
-#                 self.crawler_process.crawl(spider)
-#                 self.crawler_process.start()
-#                 request.session['scraped_data'] = self.scraped_data  # store data in session
-#                 messages.success(request, 'Scraping completed successfully.')
-#                 return redirect('success')
-#             else:
-#                 messages.error(request, 'Please enter a URL.')
-#                 return redirect('search')
-#         return self.get_response(request)
     
 
 def run_spider(url):
@@ -171,17 +142,51 @@ def search(request):
         'pdf_url_form': pdf_url_form
     })
 
-def display(request):
-    scraped_data = request.session.get('scraped_data', [])
-    results = []
-    for rule_name, data in scraped_data.items():
-        results.append({'rule_name': rule_name, 'data': data})
-        results.sort(key=lambda x: x['rule_name']) # Sort the list by rule_name
-    context = {
-        'data': results,
-    }
-    return render(request, 'base/display.html', context)
 
+
+def comparing(request):
+    file1 = None
+    file2 = None
+    diff = None
+    mapping = None
+
+    if request.method == 'POST':
+        if 'file1' in request.FILES and 'file2' in request.FILES:
+            file1 = request.FILES['file1']
+            file2 = request.FILES['file2']
+
+            # Read the contents of the files with the Windows-1252 encoding
+            file1_contents = file1.read().decode('Windows-1252')
+            file2_contents = file2.read().decode('Windows-1252')
+
+            file1_lines = file1_contents.split('\n')
+            file2_lines = file2_contents.split('\n')
+
+            # Generate the HTML diff
+            diff = difflib.HtmlDiff(wrapcolumn=85).make_file(file1_lines, file2_lines)
+
+            # Generate the unified diff
+            unified_diff = difflib.unified_diff(file1_lines, file2_lines)
+
+            # Generate the mapping of changes
+            mapping = '<br>'.join([line.strip() for line in unified_diff])
+
+        elif 'file1' in request.POST and 'file2' in request.POST:
+            file1 = request.POST['file1']
+            file2 = request.POST['file2']
+            file1_lines = file1.split('\n')
+            file2_lines = file2.split('\n')
+
+            # Generate the HTML diff
+            diff = difflib.HtmlDiff().make_file(file1_lines, file2_lines)
+
+            # Generate the unified diff
+            unified_diff = difflib.unified_diff(file1_lines, file2_lines)
+
+            # Generate the mapping of changes
+            mapping = '<br>'.join([line.strip() for line in unified_diff])
+
+    return render(request, 'base/comparingtool.html', {'file1': file1, 'file2': file2, 'diff': diff, 'mapping': mapping})
 
 # @login_required
 def url(request):

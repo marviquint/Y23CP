@@ -32,7 +32,7 @@ class MySpider(scrapy.Spider):
         # Extract title first
         rule_name = '\u000A'.join(response.css('#title').css('::text').getall())
         # Extract the rules content
-        data = '\u000A'.join(response.css('#co_document').css('::text').getall())
+        data = '\u000A'.join(response.css('#co_anchor_Credits h2 , .co_hAlign1+ div , .co_paragraphText , .co_headtext strong').css('::text').getall())
         print("Data extracted from page: ", rule_name, data)
         
         # Store the data in an item
