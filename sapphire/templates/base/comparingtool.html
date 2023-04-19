@@ -1,24 +1,55 @@
 {% extends 'main.html' %}
+
+{% block content %}
 <style>
   .diff {
     white-space: pre-wrap;
     max-width: 500px;
   }
-</style>
 
-{% block content %}
+  .fa-hand-point-down {
+    animation-name: down;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    display: inline-block;
+  }
+  
+  @keyframes down {
+    from { transform: translateY(0); }
+    to { transform: translateY(10px); }
+  }
+  
+  
+</style>
+<div class="row mb-5">
+  <div class="col">
+      <div class="card shadow" style="background-color: #27678a; background-size: cover; background-repeat: no-repeat;">
+          <div class="card-body">
+              <center>
+                  <h1 style="color: white"><i class="fa-solid fa-file-import"></i> Comparing Tool</h1>
+              </center>
+          </div>
+      </div>
+  </div>
+</div>
 <div class="row">
   <div class="col-md-12">
-    <h1>Comparing Tool</h1>
     <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
-      <div class="form-group">
-        <label for="file1">File 1:</label>
-        <input type="file" name="file1" class="form-control-file" id="file1">
-      </div>
-      <div class="form-group">
-        <label for="file2">File 2:</label>
-        <input type="file" name="file2" class="form-control-file" id="file2">
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <label for="file1" style="font-size: larger; font-weight: bold; color:  #27678a;">Upload Old Text File Here <i class="fa-regular fa-hand-point-down" style="font-size: xx-large; font-weight: bold;"></i></label>
+            <input type="file" name="file1" class="form-control" id="file1">
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <label for="file2" style="font-size: larger; font-weight: bold;  color:  #27678a;">Upload New Text File Here <i class="fa-regular fa-hand-point-down" style="font-size: xx-large; font-weight: bold;"></i></label>
+            <input type="file" name="file2" class="form-control" id="file2">
+          </div>
+        </div>
       </div>
       <button type="submit" class="btn btn-primary">Compare</button>
     </form>

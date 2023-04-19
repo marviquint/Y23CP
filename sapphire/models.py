@@ -26,10 +26,17 @@ class OTP(models.Model):
         return self.otp_code
 
 class Website(models.Model):
-    name = models.CharField(max_length=200)
-    url = models.CharField(max_length=1000)
+    ctrl_num = models.CharField(max_length=255)
+    rule_set = models.CharField(max_length=255)
+    content_class = models.CharField(max_length=255)
+    doc_type = models.CharField(max_length=255)
+    al_name = models.CharField(max_length=255)
+    src_url = models.CharField(max_length=255)
+    freq_updates = models.CharField(max_length=255)
+    freq_crawl = models.CharField(max_length=255)
+    prio_comm = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.name
+        return self.rule_set
     
 

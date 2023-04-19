@@ -53,7 +53,7 @@ def index(request):
             return render(request,'base/index.html', {'error': 'Invalid credentials'})
     return render(request, 'base/index.html')
 
-# @login_required
+@login_required
 def otp(request):
     if request.method == 'POST':
         otp = request.POST.get('otp')
@@ -66,16 +66,16 @@ def otp(request):
             return render(request,'base/otp.html', {'error': 'Invalid OTP!'})
     return render(request, 'base/otp.html')
 
-# @login_required
+@login_required
 def home(request):
-    if request.user.first_login:
-        # if user is logging in for the first time, show the modal
-        request.user.first_login = False
-        request.user.show_modal = False
-        request.user.save()
+    # if request.user.first_login:
+    #     # if user is logging in for the first time, show the modal
+    #     request.user.first_login = False
+    #     request.user.show_modal = False
+    #     request.user.save()
         return render(request, 'base/home.html', {'show_modal': True})
-    else:
-        return render(request, 'base/home.html')
+    # else:
+    #     return render(request, 'base/home.html')
     
 
 def run_spider(url):

@@ -1,29 +1,76 @@
 {% extends 'main.html' %}
 
 {% block content %}
-
+<style>
+  .spider-container {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 50px auto;
+    animation: move 2s ease-in-out infinite;
+  }
+  
+  @keyframes move {
+    0% {
+      transform: translate(0, 0);
+    }
+    25% {
+      transform: translate(20px, 0);
+    }
+    50% {
+      transform: translate(20px, 20px);
+    }
+    75% {
+      transform: translate(0, 20px);
+    }
+    100% {
+      transform: translate(0, 0);
+    }
+  }
+  
+  .fa-spider {
+    color: #27678a;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 120px;
+    transform: translate(-50%, -50%);
+  }
+  
+</style>
 <!-- MAIN -->
-<div class="container p-3 m-3 mx-auto">
-  <div class="row">
-    <div class="col-12">
+
+  <div class="row mb-5">
+    <div class="col">
+        <div class="card shadow" style="background-color: #27678a; background-size: cover; background-repeat: no-repeat;">
+            <div class="card-body">
+                <center>
+                    <h1 style="color: white"><i class="fa-brands fa-searchengin"></i> Search Tool</h1>
+                </center>
+            </div>
+        </div>
+    </div>
+  </div>
+  <div class="row p-5 m-5">
+    <div class="col-6">
       <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-          <button class="nav-link active" id="main-url-tab" data-bs-toggle="tab" data-bs-target="#main-url" type="button" role="tab" aria-controls="main-url" aria-selected="true">Crawl Website</button>
+          <button class="nav-link active" id="main-url-tab" data-bs-toggle="tab" data-bs-target="#main-url" type="button" role="tab" aria-controls="main-url" aria-selected="true">Crawl Normal Website</button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="pdf-url-tab" data-bs-toggle="tab" data-bs-target="#pdf-url" type="button" role="tab" aria-controls="pdf-url" aria-selected="false">Crawl PDF</button>
+          <button class="nav-link" id="pdf-url-tab" data-bs-toggle="tab" data-bs-target="#pdf-url" type="button" role="tab" aria-controls="pdf-url" aria-selected="false">Crawl PDF Website</button>
         </li>
       </ul>
       <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="main-url" role="tabpanel" aria-labelledby="main-url-tab">
-          <div class="col-4">
-            <h1>Crawl Website</h1>
+          <div class="col">
             {% if messages %}
             {% for message in messages %}
             {% if message.tags %}{{ message.tags }}{% endif %}{{ message }}
             {% endfor %}
             {% endif %}
               <!-- for ScrapeForm -->
+              
               <form method="post">
                 {% csrf_token %}
                 {{ main_url_form.as_p }}
@@ -32,9 +79,9 @@
           </div>
         </div>
         <div class="tab-pane fade" id="pdf-url" role="tabpanel" aria-labelledby="pdf-url-tab">
-          <div class="col-4">
-            <h1>Crawl PDF</h1>
+          <div class="col">
             <!-- for PDFScrapeForm -->
+            
             <form method="post">
               {% csrf_token %}
               {{ pdf_url_form.as_p }}
@@ -44,8 +91,22 @@
         </div>
       </div>
     </div>
+    <div class="col-6">
+      <div class="card" style="background-color: #27678a;">
+        <div class="card-body">
+          <h3 class="text-justified text-white">
+            Instructions
+          </h3>
+          <ul>
+            <li style="font-size:larger; color:white;">Select a tab according to the website Type</li>
+            <li style="font-size:larger; color:white;">Crawl according to the website typee</li>
+            <li style="font-size:larger; color:white;">Input URL in the text box</li>
+          </ul>
+        </div>
+      </div>  
+    </div>
   </div>
-</div>
+
 <!-- MAIN -->
 
 {% endblock content %}

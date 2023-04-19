@@ -12,14 +12,14 @@ class CustomPasswordChangeForm(PasswordChangeForm):
 
 class ScrapeForm(forms.Form):
     main_url = forms.CharField(
-        label='Enter main URL to scrape',
+        label='Enter Normal Website URL to Crawl',
         max_length=255,
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        widget=forms.TextInput(attrs={'class': 'form-control text-large'})
     )
 
 class PDFScrapeForm(forms.Form):
     pdf_spider_url = forms.CharField(
-        label='Enter URL for PDF Spider',
+        label='Enter PDF Website URL to Crawl',
         max_length=255,
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        widget=forms.TextInput(attrs={'class': 'form-control text-large'})
     )

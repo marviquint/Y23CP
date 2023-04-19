@@ -54,7 +54,7 @@ class URLCSVImportForm(forms.Form):
 
 
 class WebsiteAdmin(admin.ModelAdmin):
-    list_display = ("name", 'url')
+    list_display = ("ctrl_num", 'rule_set', 'content_class', 'doc_type', 'al_name', 'src_url', 'freq_updates', 'freq_crawl', 'prio_comm')
 
     def get_urls(self):
         urls = super().get_urls()
@@ -76,10 +76,18 @@ class WebsiteAdmin(admin.ModelAdmin):
                 csv_data.pop()  # Remove it from the list
             for x in csv_data:
                 fields = x.split(",")
-                created = Website.objects.update_or_create(
-                    name= fields[0],
-                    url = fields[1],
-                )
+                if len(fields) >= 9:
+                    created = Website.objects.update_or_create(
+                        ctrl_num = fields[0],
+                        rule_set = fields[1], 
+                        content_class = fields[2],
+                        doc_type = fields[3],
+                        al_name = fields[4],
+                        src_url = fields[5],
+                        freq_updates = fields[6],
+                        freq_crawl = fields[7],
+                        prio_comm = fields[8],
+                    )
             to = reverse('admin:index')
             return HttpResponseRedirect(to)
 
