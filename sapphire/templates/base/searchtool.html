@@ -97,8 +97,8 @@
         aria-labelledby="main-url-tab"
       >
         <div class="col">
-          {% if messages %} {% for message in messages %} {% if message.tags
-          %}{{ message.tags }}{% endif %}
+          {% if messages %} {% for message in messages %} {% if message.tags%}
+          {{ message.tags }}{% endif %}
           <div class="alert alert-success" role="alert">{{ message }}</div>
           {% endfor %} {% endif %}
           <!-- for ScrapeForm -->
