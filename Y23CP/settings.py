@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -168,6 +169,10 @@ ROBOTSTXT_OBEY = False
 
 FEED_FORMAT = 'json'
 FEED_URI = 'results.json'
+
+# Define the downloads folder path
+DOWNLOADS_FOLDER = os.path.join(os.path.expanduser("~"), "Downloads", "District of Columbia Courts")
+
 
 SPIDER_MIDDLEWARES = {
     'myproject.middlewares.StartSpiderMiddleware': 543,

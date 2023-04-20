@@ -66,7 +66,7 @@ def otp(request):
             return render(request,'base/otp.html', {'error': 'Invalid OTP!'})
     return render(request, 'base/otp.html')
 
-@login_required
+#@login_required
 def home(request):
     # if request.user.first_login:
     #     # if user is logging in for the first time, show the modal
@@ -78,7 +78,7 @@ def home(request):
     #     return render(request, 'base/home.html')
     
 
-def run_spider(url):
+def run_spider(url, success_callback):
     settings = get_project_settings()
     process = CrawlerProcess(settings)
     runner = CrawlerRunner(settings)
@@ -86,30 +86,26 @@ def run_spider(url):
     @defer.inlineCallbacks
     def crawl():
         yield runner.crawl(MySpider, start_url=url)
+        success_callback()
+        reactor.stop()
 
     crawl()
     reactor.run()
-    items = {}
-    path = os.path.join(django_settings.STATICFILES_DIRS[0], 'files')
-    for file_name in os.listdir(path):
-        if file_name.endswith('.txt'):
-            with open(os.path.join(path, file_name), 'r') as f:
-                rule_name = file_name[:-4]  # remove the '.txt' extension
-                data = f.read()
-                items[rule_name] = data
-
-    return items
 
 
-def spider_runner_pdf(url):
+def spider_runner_pdf(url, success_callback):
     settings = get_project_settings()
     runner = CrawlerRunner(settings)
 
     @defer.inlineCallbacks
     def crawl():
         yield runner.crawl(PDFSpider, start_url=url)
+        success_callback()
+        reactor.stop()
 
     crawl()
+    reactor.run()
+
 
 def search(request):
     main_url_form = ScrapeForm(request.POST or None, prefix='main_url')
@@ -119,20 +115,22 @@ def search(request):
         if main_url_form.is_valid():
             main_url = main_url_form.cleaned_data['main_url']
             if main_url:
-                request.session['scraped_data_main'] = run_spider(main_url)
-                messages.success(request, 'The crawl is successful.')
-                print('The crawl successful.')
+                def success_callback():
+                    messages.success(request, 'The crawl is successful.')
+                    print('The crawl successful.')
+                run_spider(main_url, success_callback)
             else:
                 messages.error(request, 'Please enter a URL for main page.')
                 return redirect('search')
-            
+
     if request.method == 'POST':
         if pdf_url_form.is_valid():
             pdf_url = pdf_url_form.cleaned_data['pdf_spider_url']
             if pdf_url:
-                spider_runner_pdf(pdf_url)
-                messages.success(request, 'PDF crawl successful.')
-                print('PDF crawl successful.')
+                def success_callback():
+                    messages.success(request, 'PDF crawl successful.')
+                    print('PDF crawl successful.')
+                spider_runner_pdf(pdf_url, success_callback)
             else:
                 messages.error(request, 'Please enter a URL for PDF.')
         return redirect('search')
@@ -141,7 +139,6 @@ def search(request):
         'main_url_form': main_url_form,
         'pdf_url_form': pdf_url_form
     })
-
 
 
 def comparing(request):

@@ -27,16 +27,18 @@ class PDFSpider(scrapy.Spider):
             # Download the PDF for this rule
             pdf_url = data['pdf_link'][0]
             pdf_name = data['rule_name'][0] + '.pdf'
-            if not os.path.exists('pdfs'):
-                os.makedirs('pdfs')
-            yield scrapy.Request(url=pdf_url, meta={'pdf_name': pdf_name}, callback=self.save_pdf)
+            pdf_folder = os.path.join(settings.DOWNLOADS_FOLDER, 'pdfs')
+            pdf_path = os.path.join(pdf_folder, pdf_name)
+            if not os.path.exists(pdf_folder):
+                os.makedirs(pdf_folder)
+            yield scrapy.Request(url=pdf_url, meta={'pdf_path': pdf_path}, callback=self.save_pdf)
 
     def save_pdf(self, response):
         # Convert the PDF to a text file
         pdf_bytes = response.body
-        pdf_name = response.meta['pdf_name']
-        text_name = os.path.splitext(pdf_name)[0] + '.txt'
-        text_path = os.path.join(settings.STATICFILES_DIRS[0], 'pdfs', text_name)
+        pdf_path = response.meta['pdf_path']
+        text_name = os.path.splitext(os.path.basename(pdf_path))[0] + '.txt'
+        text_path = os.path.join(settings.DOWNLOADS_FOLDER, 'pdfs', text_name)
         with open(text_path, 'w') as f:
             with io.BytesIO(pdf_bytes) as pdf_file:
                 with pdfplumber.open(pdf_file) as pdf:

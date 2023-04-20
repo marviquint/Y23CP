@@ -50,8 +50,15 @@ class MySpider(scrapy.Spider):
         self.handle_results()
     
     def handle_results(self):
+        # Create a folder in the Downloads directory
+        folder_name = "Arizona Court Rules"
+        downloads_path = os.path.expanduser("~/Downloads")
+        folder_path = os.path.join(downloads_path, folder_name)
+        os.makedirs(folder_path, exist_ok=True)
+        
         # Write each rule_name and its corresponding data to separate text files
         for rule_name, data in self.items.items():
-            path = os.path.join(settings.STATICFILES_DIRS[0], 'files', f"{rule_name}.txt")
-            with open(path, "w") as f:
+            file_name = f"{rule_name}.txt"
+            file_path = os.path.join(folder_path, file_name)
+            with open(file_path, "w") as f:
                 f.write(data)
