@@ -23,7 +23,6 @@ from scrapy.utils.log import configure_logging
 import os, difflib 
 import openai
 
-openai.api_key = "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"
 
 configure_logging()
 
