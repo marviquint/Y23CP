@@ -58,7 +58,7 @@ class MySpider(scrapy.Spider):
         
         # Write each rule_name and its corresponding data to separate text files
         for rule_name, data in self.items.items():
-            file_name = f"{rule_name}.txt"
+            file_name = f"(NEW) {rule_name}.txt"
             file_path = os.path.join(folder_path, file_name)
             with open(file_path, "w") as f:
                 f.write(data)

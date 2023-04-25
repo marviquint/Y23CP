@@ -18,8 +18,12 @@ from scrapy.crawler import CrawlerRunner, CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from scrapy_project.scrapyproject.scrapyproject.spiders.lawspider import MySpider
 from scrapy_project.scrapyproject.scrapyproject.spiders.pdfspider import PDFSpider
+#from scrapy_project.scrapyproject.scrapyproject.spiders.tryspider import CourtSpider
 from scrapy.utils.log import configure_logging
 import os, difflib 
+import openai
+
+openai.api_key = "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"
 
 configure_logging()
 
@@ -66,7 +70,7 @@ def otp(request):
             return render(request,'base/otp.html', {'error': 'Invalid OTP!'})
     return render(request, 'base/otp.html')
 
-#@login_required
+@login_required
 def home(request):
     # if request.user.first_login:
     #     # if user is logging in for the first time, show the modal
@@ -123,7 +127,6 @@ def search(request):
                 messages.error(request, 'Please enter a URL for main page.')
                 return redirect('search')
 
-    if request.method == 'POST':
         if pdf_url_form.is_valid():
             pdf_url = pdf_url_form.cleaned_data['pdf_spider_url']
             if pdf_url:
@@ -131,9 +134,10 @@ def search(request):
                     messages.success(request, 'PDF crawl successful.')
                     print('PDF crawl successful.')
                 spider_runner_pdf(pdf_url, success_callback)
+                #try_run_spider(pdf_url, success_callback)
             else:
                 messages.error(request, 'Please enter a URL for PDF.')
-        return redirect('search')
+            return redirect('search')
 
     return render(request, 'base/searchtool.html', {
         'main_url_form': main_url_form,
@@ -141,6 +145,7 @@ def search(request):
     })
 
 
+# @login_required
 def comparing(request):
     file1 = None
     file2 = None
@@ -153,8 +158,8 @@ def comparing(request):
             file2 = request.FILES['file2']
 
             # Read the contents of the files with the Windows-1252 encoding
-            file1_contents = file1.read().decode('Windows-1252')
-            file2_contents = file2.read().decode('Windows-1252')
+            file1_contents = file1.read().decode(encoding='utf_16',errors='strict')
+            file2_contents = file2.read().decode(encoding='utf_16',errors='strict')
 
             file1_lines = file1_contents.split('\n')
             file2_lines = file2_contents.split('\n')
@@ -174,8 +179,16 @@ def comparing(request):
             file1_lines = file1.split('\n')
             file2_lines = file2.split('\n')
 
+            # Get the edited diff content
+            edited_content = request.POST['edited_diff']
+
+            # Parse the edited diff content and apply the changes
+            mapping_lines = edited_content.split('\n')
+            changes = list(difflib.restore(mapping_lines, 1))
+            file1_lines, file2_lines = list(difflib.unified_diff(file1_lines, file2_lines, lineterm='')), list(changes)
+
             # Generate the HTML diff
-            diff = difflib.HtmlDiff().make_file(file1_lines, file2_lines)
+            diff = difflib.HtmlDiff(wrapcolumn=85).make_file(file1_lines, file2_lines)
 
             # Generate the unified diff
             unified_diff = difflib.unified_diff(file1_lines, file2_lines)
@@ -185,7 +198,9 @@ def comparing(request):
 
     return render(request, 'base/comparingtool.html', {'file1': file1, 'file2': file2, 'diff': diff, 'mapping': mapping})
 
-# @login_required
+
+
+@login_required
 def url(request):
     websites = Website.objects.all()
     return render(request, 'base/url.html', {'websites': websites})
