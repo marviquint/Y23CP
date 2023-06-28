@@ -21,7 +21,7 @@ from scrapy_project.scrapyproject.scrapyproject.spiders.pdfspider import PDFSpid
 #from scrapy_project.scrapyproject.scrapyproject.spiders.tryspider import CourtSpider
 from scrapy.utils.log import configure_logging
 import os, difflib 
-import openai
+#import openai
 
 
 configure_logging()
